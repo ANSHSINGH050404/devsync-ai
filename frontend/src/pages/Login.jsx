@@ -42,11 +42,8 @@ export default function LoginPage() {
             <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-6">
               <Shield className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-5xl font-bold mb-4">Welcome to SecureApp</h1>
-            <p className="text-xl opacity-90 max-w-md">
-              Your secure gateway to seamless digital experiences. Join
-              thousands of users worldwide.
-            </p>
+            <h1 className="text-5xl font-bold mb-4">Welcome to Devsync</h1>
+            
           </div>
           <div className="grid grid-cols-3 gap-4 opacity-60">
             <div className="w-16 h-16 bg-white/10 rounded-lg"></div>
@@ -170,7 +167,7 @@ export default function LoginPage() {
 
             <div className="text-center pt-4">
               <p className="text-gray-400 text-sm">
-                New to SecureApp?{" "}
+                New to Devsync?{" "}
                 <a
                   href="#"
                   className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors duration-200"

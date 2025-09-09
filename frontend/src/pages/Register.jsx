@@ -24,7 +24,7 @@ export default function RegisterPage() {
       console.log(res.data);
       localStorage.setItem('token',res.data.token)
       setUser(res.data.user)
-      navigate('/');
+      navigate('/login');
 
       
     }).catch((err) =>{
@@ -45,10 +45,7 @@ export default function RegisterPage() {
               <Shield className="w-10 h-10 text-white" />
             </div>
             <h1 className="text-5xl font-bold mb-4">Welcome to DEVSYNC</h1>
-            <p className="text-xl opacity-90 max-w-md">
-              Your secure gateway to seamless digital experiences. Join
-              thousands of users worldwide.
-            </p>
+            
           </div>
           <div className="grid grid-cols-3 gap-4 opacity-60">
             <div className="w-16 h-16 bg-white/10 rounded-lg"></div>
