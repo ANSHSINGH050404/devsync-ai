@@ -5,6 +5,7 @@ import userRoutes from './routes/user.routes.js';
 import { connectDB } from './db/db.js';
 import cors from 'cors'
 import projectRoutes from './routes/project.routes.js'
+import aiRoutes from './routes/ai.routes.js';
 connectDB();
 
 const app = express();
@@ -22,6 +23,7 @@ app.use(cors({
 // Routes
 app.use('/users', userRoutes);
 app.use('/projects',projectRoutes)
+app.use("/ai", aiRoutes)
 
 app.get('/', (req, res) => {
   res.send('Hello node');
