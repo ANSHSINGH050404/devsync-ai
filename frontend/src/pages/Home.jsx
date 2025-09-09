@@ -2,15 +2,14 @@ import React, { useContext, useState, useEffect } from "react";
 import { UserContext } from "../context/user.context";
 import { PersonStanding, PlusSquare, UserIcon, X } from "lucide-react";
 import axios from "../config/axios";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const navigate=useNavigate();
-
+  const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [projectName, setProjectName] = useState("");
-  const [projects, setProjects] = useState([]); // Initialize as empty array
+  const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -20,10 +19,10 @@ const Home = () => {
   const fetchProjects = async () => {
     try {
       const res = await axios.get("/projects/all");
-      setProjects(res.data.projects || []); // Fallback to empty array
+      setProjects(res.data.projects || []);
     } catch (err) {
       console.error("Failed to fetch projects:", err);
-      setProjects([]); // Set empty array on error
+      setProjects([]);
     }
   };
 
@@ -36,34 +35,23 @@ const Home = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!projectName.trim()) {
       alert("Please enter a project name");
       return;
     }
-
     setIsLoading(true);
-
     try {
       const res = await axios.post("/projects/create", {
         name: projectName.trim(),
       });
-
-      console.log("Create response:", res.data); // Debug log
-
-      // Check different possible response structures
-      const newProject = res.data.project ||
+      const newProject =
+        res.data.project ||
         res.data || {
-          _id: Date.now().toString(), // Fallback ID
+          _id: Date.now().toString(),
           name: projectName.trim(),
         };
-
-      // Add the new project to the existing list
       setProjects((prevProjects) => [...prevProjects, newProject]);
       handleCloseForm();
-
-      // Alternative: Refresh the entire list from server
-      // await fetchProjects();
     } catch (err) {
       console.error("Failed to create project:", err);
       alert("Failed to create project. Please try again.");
@@ -73,68 +61,67 @@ const Home = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4">
+    <div className="min-h-screen bg-gray-50 p-6 font-sans">
       {/* Create Project Button */}
-      <div className="border-2 h-[50px] w-[120px] m-2.5 rounded-2xl flex justify-center items-center bg-white shadow-sm hover:shadow-md transition-shadow">
+      <div className="flex justify-start mb-8">
         <button
-          className="flex items-center gap-2 p-2"
           onClick={handleOpenForm}
+          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg shadow-md hover:shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all duration-300"
         >
-          <h1 className="text-sm font-semibold">Project</h1>
-          <PlusSquare className="size-6 text-blue-500" />
+          <PlusSquare className="size-5" />
+          <span className="text-sm font-medium">New Project</span>
         </button>
       </div>
 
       {/* Projects List */}
-      <div className="mt-6">
-        <h2 className="text-2xl font-bold mb-4">Your Projects</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="mt-8">
+        <h2 className="text-3xl font-bold text-gray-800 mb-6">Your Projects</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {projects.length > 0 ? (
             projects.map((project) => (
               <div
                 key={project._id}
-                onClick={() =>{
-                  navigate('/project',{
-                    state:{project}
+                onClick={() =>
+                  navigate("/project", {
+                    state: { project },
                   })
-                }}
-                className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow border"
+                }
+                className="bg-white p-5 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100 hover:border-blue-200"
               >
-                <h3 className="font-semibold text-lg">{project.name}</h3>
-                <div className="flex gap-2">
-                  <UserIcon />
-                  <p>Collaborators: </p>
-                  {project.users.length}
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">{project.name}</h3>
+                <div className="flex items-center gap-2 text-gray-600">
+                  <UserIcon className="size-4" />
+                  <p className="text-sm">Collaborators: {project.users.length}</p>
                 </div>
               </div>
             ))
           ) : (
-            <p className="text-gray-500 col-span-full">
-              No projects found. Create your first project!
-            </p>
+            <div className="col-span-full text-center py-10">
+              <p className="text-gray-500 text-lg">No projects found. Create your first project!</p>
+            </div>
           )}
         </div>
       </div>
 
       {/* Modal Form */}
       {isFormOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Create New Project</h2>
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 transition-opacity duration-300">
+          <div className="bg-white rounded-2xl p-8 w-full max-w-lg shadow-2xl">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-800">Create New Project</h2>
               <button
-                className="text-gray-500 hover:text-gray-700 p-1"
                 onClick={handleCloseForm}
+                className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
               >
                 <X className="size-6" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label
                   htmlFor="projectName"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-gray-700 mb-2"
                 >
                   Project Name
                 </label>
@@ -143,25 +130,25 @@ const Home = () => {
                   type="text"
                   value={projectName}
                   onChange={(e) => setProjectName(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none transition-all duration-200"
                   placeholder="Enter project name"
                   required
                   disabled={isLoading}
                 />
               </div>
 
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={handleCloseForm}
-                  className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 transition-colors"
+                  className="px-5 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200"
                   disabled={isLoading}
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={isLoading}
                 >
                   {isLoading ? "Creating..." : "Create"}
